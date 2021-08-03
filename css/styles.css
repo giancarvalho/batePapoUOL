@@ -1,0 +1,64 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+.website {
+  width: 100vw;
+}
+
+header {
+  height: auto;
+  display: flex;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  font-size: 40px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.05);
+}
+
+main {
+  height: 100%;
+  width: 100%;
+  background-color: #f3f3f3;
+  padding: 90px 0px 80px;
+}
+
+/* beginning bottom bar */
+.bottom-bar {
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  background-color: #ffffff;
+  padding: 15px 20px;
+}
+
+.bottom-bar > input {
+  height: 35px;
+  flex-grow: 3;
+  border: none;
+}
+
+.bottom-bar > input::placeholder {
+  font-style: italic;
+  color: #000;
+}
+
+.bottom-bar > button {
+  border: none;
+  background-color: transparent;
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.05);
+}
