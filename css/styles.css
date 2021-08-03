@@ -44,6 +44,7 @@ main {
   z-index: 1;
   background-color: #ffffff;
   padding: 15px 20px;
+  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.05);
 }
 
 .bottom-bar > input {
@@ -60,5 +61,4 @@ main {
 .bottom-bar > button {
   border: none;
   background-color: transparent;
-  box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.05);
 }
