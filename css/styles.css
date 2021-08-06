@@ -132,11 +132,19 @@ main {
 }
 
 .contact li,
-.visibility-settings div {
+.visibility-settings button {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 10px 0 10px 0;
+}
+
+.visibility-settings button {
+  border: none;
+  background-color: transparent;
+  font-size: 15px;
+  padding: 0;
+  width: 100%;
 }
 
 .side-menu span {

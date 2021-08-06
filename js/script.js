@@ -17,6 +17,8 @@ function getUsername() {
   // send to server user
   if (username !== "" && username !== null) {
     sendUser(username);
+    selectUser("default");
+    selectType("default");
     getMessages();
     requestInterval();
   } else {
@@ -54,16 +56,26 @@ function getMessages() {
 
 // get message details from current user, not yet working
 function sendMessage() {
+  const inputField = document.querySelector(".bottom-bar input");
   userMessage.from = username;
-  userMessage.to = document.querySelector(".contact .selected").innerText;
-  userMessage.text = document.querySelector(".bottom-bar input").value;
-  userMessage.type = document.querySelector(".visibility .selected").innerText;
+  userMessage.to = confirmUser();
+  userMessage.text = inputField.value;
 
-  let promise = axios.post(URL_MESSAGES, userMessage);
+  console.log(userMessage);
+  axios.post(URL_MESSAGES, userMessage);
+  inputField.value = null;
+  getMessages();
 }
 
+function confirmUser() {
+  if (selectedUser === null || selectedUser === "") {
+    return "Todos";
+  } else {
+    return selectedUser;
+  }
+}
 // makes sure the messages are up to date and user is online, sendUser is the wrong function
-function requestInterval(username) {
+function requestInterval() {
   setInterval(getMessages, 3000);
   setInterval(keepUserConnected, 5000);
 }
@@ -78,7 +90,6 @@ function scrollToLast() {
   let lastItem = document.querySelector(".chat-box li:nth-last-child(1)");
 
   lastItem.scrollIntoView({
-    behavior: "smooth",
     block: "start",
     inline: "nearest",
   });
@@ -177,16 +188,15 @@ function toggleMenu() {
 function selectUser(element) {
   const previousSelected = document.querySelector(".contact .selected");
 
+  if (element === "default") {
+    element = document.querySelector(".contact .default");
+  }
+
   if (previousSelected !== element && previousSelected !== null) {
     previousSelected.classList.remove("selected");
   }
   element.classList.add("selected");
-
-  if (element.innerText === "Todos") {
-    selectedUser = "Todos";
-  } else {
-    selectedUser = element.innerText;
-  }
+  selectedUser = element.innerText;
 }
 
 function selectType(element) {
@@ -194,9 +204,13 @@ function selectType(element) {
     ".visibility-settings .selected"
   );
 
+  if (element === "default") {
+    element = document.querySelector(".visibility-settings .default");
+  }
+
   if (previousSelected !== element && previousSelected !== null) {
     previousSelected.classList.remove("selected");
   }
   element.classList.add("selected");
-  userMessage.type = element.innerText;
+  userMessage.type = element.value;
 }

@@ -30,7 +30,7 @@
         <div class="contact">
           <p>Escolha um contato para enviar a mensagem:</p>
           <ul>
-            <li onclick="selectUser(this)">
+            <li class="default" onclick="selectUser(this)">
               <span><ion-icon name="people"></ion-icon>Todos</span
               ><ion-icon name="checkmark-outline"></ion-icon>
             </li>
@@ -48,14 +48,14 @@
         </div>
         <div class="visibility-settings">
           <p>Escolha a visibilidade:</p>
-          <div class="public">
+          <button class="default" value="message" onclick="selectType(this);">
             <span> <ion-icon name="lock-open"></ion-icon>Público</span>
             <ion-icon name="checkmark-outline"></ion-icon>
-          </div>
-          <div class="private">
+          </button>
+          <button value="private_message" onclick="selectType(this);">
             <span> <ion-icon name="lock-closed"></ion-icon>Reservadamente</span>
             <ion-icon name="checkmark-outline"></ion-icon>
-          </div>
+          </button>
         </div>
       </div>
       <div class="overlay" onclick="toggleMenu();"></div>
@@ -71,7 +71,7 @@
       <!-- beginning bottom bar -->
       <div class="bottom-bar">
         <input type="text" placeholder="Escreva aqui..." />
-        <button>
+        <button onclick="sendMessage();">
           <img src="assets/Vector.png" alt="send-vector" />
         </button>
       </div>
