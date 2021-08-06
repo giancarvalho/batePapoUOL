@@ -126,13 +126,15 @@ function renderStatus(status) {
 }
 
 function renderPrivateMessage(message) {
-  messageList.innerHTML += `            <li class="${message.type}">
+  if (message.to === username || message.from === username) {
+    messageList.innerHTML += `            <li class="${message.type}">
   <p>
     <span class="time">(${message.time})</span>
     <span class="bold">${message.from}</span> reservadamente para
     <span class="bold">${message.to}</span>: ${message.text}
   </p>
 </li>`;
+  }
 }
 
 function renderMessage(message) {
