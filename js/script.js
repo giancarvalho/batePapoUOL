@@ -1,12 +1,13 @@
 const URL_PARTICIPANTS =
   "https://mock-api.bootcamp.respondeai.com.br/api/v3/uol/participants";
 const URL_MESSAGES =
-  "https://mock-api.bootcamp.respondeai.com.br/api/v2/uol/messages";
+  "https://mock-api.bootcamp.respondeai.com.br/api/v3/uol/messages";
 const URL_STATUS =
   "https://mock-api.bootcamp.respondeai.com.br/api/v3/uol/status";
 const messageList = document.querySelector(".chat-box > ul");
 let username;
 const userMessage = {};
+let lastMessage = "";
 
 getUsername();
 
@@ -18,6 +19,7 @@ function getUsername() {
   if (username !== "" && username !== null) {
     sendUser(username);
     getMessages();
+    requestInterval();
   } else {
     getUsername();
   }
@@ -58,22 +60,51 @@ function sendMessage() {
 // makes sure the messages are up to date and user is online, sendUser is the wrong function
 function requestInterval(username) {
   setInterval(getMessages, 3000);
-  setInterval(sendUser, 3000, username);
+  //setInterval(sendUser, 3000, username);
+}
+
+function existNewMessages(messages) {
+  message = messages.slice(-1);
+
+  return lastMessage !== message;
+}
+
+function scrollToLast() {
+  let lastItem = document.querySelector(".chat-box li:nth-last-child(1)");
+
+  lastItem.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+    inline: "nearest",
+  });
+}
+
+function sortbyTime(response) {
+  let messages = response.data.sort(function (a, b) {
+    return a.time.localeCompare(b.time);
+  });
+
+  return messages;
 }
 
 // render messages scripts
 function renderMessages(response) {
-  const messages = response.data;
-  messageList.innerHTML = "";
+  let messages = response.data;
+  console.log(messages);
 
-  for (let i = 0; messages.length > i; i++) {
-    if (messages[i].type === "status") {
-      renderStatus(messages[i]);
-    } else if (messages[i].type === "private_message") {
-      renderPrivateMessage(messages[i]);
-    } else {
-      renderMessage(messages[i]);
+  if (existNewMessages(messages)) {
+    messageList.innerHTML = "";
+    for (let i = 0; messages.length > i; i++) {
+      lastMessage = messages[i];
+      if (messages[i].type === "status") {
+        renderStatus(messages[i]);
+      } else if (messages[i].type === "private_message") {
+        renderPrivateMessage(messages[i]);
+      } else {
+        renderMessage(messages[i]);
+      }
     }
+    scrollToLast();
   }
 }
 
