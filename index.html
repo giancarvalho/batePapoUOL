@@ -30,18 +30,20 @@
         <div class="contact">
           <p>Escolha um contato para enviar a mensagem:</p>
           <ul>
-            <li onclick="selectElement(this)">
+            <li onclick="selectUser(this)">
               <span><ion-icon name="people"></ion-icon>Todos</span
               ><ion-icon name="checkmark-outline"></ion-icon>
             </li>
-            <li onclick="selectElement(this)">
-              <span><ion-icon name="person-circle"></ion-icon>João</span
-              ><ion-icon name="checkmark-outline"></ion-icon>
-            </li>
-            <li onclick="selectElement(this)">
-              <span><ion-icon name="person-circle"></ion-icon>João</span
-              ><ion-icon name="checkmark-outline"></ion-icon>
-            </li>
+            <div class="users">
+              <li onclick="selectElement(this)">
+                <span><ion-icon name="person-circle"></ion-icon>João</span
+                ><ion-icon name="checkmark-outline"></ion-icon>
+              </li>
+              <li onclick="selectElement(this)">
+                <span><ion-icon name="person-circle"></ion-icon>João</span
+                ><ion-icon name="checkmark-outline"></ion-icon>
+              </li>
+            </div>
           </ul>
         </div>
         <div class="visibility-settings">
@@ -52,7 +54,6 @@
           </div>
           <div class="private">
             <span> <ion-icon name="lock-closed"></ion-icon>Reservadamente</span>
-
             <ion-icon name="checkmark-outline"></ion-icon>
           </div>
         </div>

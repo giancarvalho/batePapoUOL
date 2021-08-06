@@ -8,13 +8,12 @@ const messageList = document.querySelector(".chat-box > ul");
 let username;
 const userMessage = {};
 let lastMessage = "";
-
+let selectedUser;
 getUsername();
 
 // gets and validates username
 function getUsername() {
   username = prompt("Qual o seu nome?");
-
   // send to server user
   if (username !== "" && username !== null) {
     sendUser(username);
@@ -32,9 +31,15 @@ function sendUser(username) {
   promise.catch(handleError);
 }
 
+function keepUserConnected() {
+  let promise = axios.post(URL_STATUS, { name: username });
+
+  promise.catch(handleError);
+}
+
 function handleError(error) {
   if (error.response.status === 400) {
-    alert("Nome nao disponivel");
+    alert("Nome não disponivel. Por favor, escolha outro.");
     getUsername();
   }
 }
@@ -60,7 +65,7 @@ function sendMessage() {
 // makes sure the messages are up to date and user is online, sendUser is the wrong function
 function requestInterval(username) {
   setInterval(getMessages, 3000);
-  //setInterval(sendUser, 3000, username);
+  setInterval(keepUserConnected, 5000);
 }
 
 function existNewMessages(messages) {
@@ -79,20 +84,12 @@ function scrollToLast() {
   });
 }
 
-function sortbyTime(response) {
-  let messages = response.data.sort(function (a, b) {
-    return a.time.localeCompare(b.time);
-  });
-
-  return messages;
-}
-
 // render messages scripts
 function renderMessages(response) {
   let messages = response.data;
-  console.log(messages);
 
   if (existNewMessages(messages)) {
+    getParticipants();
     messageList.innerHTML = "";
     for (let i = 0; messages.length > i; i++) {
       lastMessage = messages[i];
@@ -137,6 +134,36 @@ function renderMessage(message) {
 </li>`;
 }
 
+function getParticipants() {
+  let promise = axios.get(URL_PARTICIPANTS);
+
+  promise.then(renderParticipants);
+}
+
+function renderParticipants(response) {
+  let newParticipants = response.data;
+  const usersList = document.querySelector(".contact .users");
+
+  usersList.innerHTML = "";
+  for (let i = 0; newParticipants.length > i; i++) {
+    if (newParticipants[i].name === selectedUser) {
+      usersList.innerHTML += `<li class="selected" 'onclick="selectUser(this)">
+        <span>
+          <ion-icon name="person-circle"></ion-icon>${newParticipants[i].name}
+        </span>
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </li>`;
+    } else {
+      usersList.innerHTML += `<li onclick="selectUser(this)">
+        <span>
+          <ion-icon name="person-circle"></ion-icon>${newParticipants[i].name}
+        </span>
+        <ion-icon name="checkmark-outline"></ion-icon>
+      </li>`;
+    }
+  }
+}
+
 // animation page
 
 function toggleMenu() {
@@ -147,11 +174,29 @@ function toggleMenu() {
   overlay.classList.toggle("active");
 }
 
-function selectElement(element) {
+function selectUser(element) {
   const previousSelected = document.querySelector(".contact .selected");
 
   if (previousSelected !== element && previousSelected !== null) {
     previousSelected.classList.remove("selected");
   }
   element.classList.add("selected");
+
+  if (element.innerText === "Todos") {
+    selectedUser = "Todos";
+  } else {
+    selectedUser = element.innerText;
+  }
+}
+
+function selectType(element) {
+  const previousSelected = document.querySelector(
+    ".visibility-settings .selected"
+  );
+
+  if (previousSelected !== element && previousSelected !== null) {
+    previousSelected.classList.remove("selected");
+  }
+  element.classList.add("selected");
+  userMessage.type = element.innerText;
 }
