@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/styles.css" />
@@ -30,20 +30,12 @@
         <div class="contact">
           <p>Escolha um contato para enviar a mensagem:</p>
           <ul>
-            <li class="default" onclick="selectUser(this)">
-              <span><ion-icon name="people"></ion-icon>Todos</span
-              ><ion-icon name="checkmark-outline"></ion-icon>
+            <li onclick="selectUser(this)" class="default">
+              <span> <ion-icon name="people"></ion-icon>Todos</span>
+              <ion-icon name="checkmark-outline"></ion-icon>
             </li>
-            <div class="users">
-              <li onclick="selectElement(this)">
-                <span><ion-icon name="person-circle"></ion-icon>João</span
-                ><ion-icon name="checkmark-outline"></ion-icon>
-              </li>
-              <li onclick="selectElement(this)">
-                <span><ion-icon name="person-circle"></ion-icon>João</span
-                ><ion-icon name="checkmark-outline"></ion-icon>
-              </li>
-            </div>
+
+            <div class="users"></div>
           </ul>
         </div>
         <div class="visibility-settings">
@@ -70,10 +62,13 @@
       <!-- end main -->
       <!-- beginning bottom bar -->
       <div class="bottom-bar">
-        <input type="text" placeholder="Escreva aqui..." />
-        <button onclick="sendMessage();">
-          <img src="assets/Vector.png" alt="send-vector" />
-        </button>
+        <div class="message-field">
+          <input type="text" placeholder="Escreva aqui..." />
+          <button onclick="sendMessage();">
+            <img src="assets/Vector.png" alt="send-vector" />
+          </button>
+        </div>
+        <div class="recipient"></div>
       </div>
       <!-- end bottom bar -->
     </div>

@@ -16,16 +16,19 @@ function getUsername() {
   username = prompt("Qual o seu nome?");
   // send to server user
   if (username !== "" && username !== null) {
-    sendUser(username);
-    selectUser("default");
-    selectType("default");
-    getMessages();
-    requestInterval();
+    initializeChat(username);
   } else {
     getUsername();
   }
 }
 
+function initializeChat(username) {
+  sendUser(username);
+  setDefault();
+  sendWithEnter();
+  getMessages();
+  requestInterval();
+}
 // send username to api
 function sendUser(username) {
   let promise = axios.post(URL_PARTICIPANTS, { name: username });
@@ -190,15 +193,21 @@ function toggleMenu() {
 function selectUser(element) {
   const previousSelected = document.querySelector(".contact .selected");
 
-  if (element === "default") {
-    element = document.querySelector(".contact .default");
-  }
-
   if (previousSelected !== element && previousSelected !== null) {
     previousSelected.classList.remove("selected");
   }
+
   element.classList.add("selected");
   selectedUser = element.innerText;
+  showRecipient();
+}
+
+function setDefault() {
+  const defaultContact = document.querySelector(".contact .default");
+  const defaultType = document.querySelector(".visibility-settings .default");
+
+  selectType(defaultType);
+  selectUser(defaultContact);
 }
 
 function selectType(element) {
@@ -206,13 +215,35 @@ function selectType(element) {
     ".visibility-settings .selected"
   );
 
-  if (element === "default") {
-    element = document.querySelector(".visibility-settings .default");
-  }
-
   if (previousSelected !== element && previousSelected !== null) {
     previousSelected.classList.remove("selected");
   }
+
   element.classList.add("selected");
   userMessage.type = element.value;
+  showRecipient();
+}
+
+function showRecipient() {
+  const element = document.querySelector(".recipient");
+
+  if (userMessage.type === "private_message") {
+    element.innerHTML = `Enviando para ${selectedUser} (reservadamente)`;
+  } else if (selectedUser === null || selectedUser === "") {
+    element.innerHTML = `Enviando para Todos`;
+  } else {
+    element.innerHTML = `Enviando para ${selectedUser}`;
+  }
+}
+
+function sendWithEnter() {
+  const sendButton = document.querySelector(".bottom-bar button");
+  const inputField = document.querySelector(".bottom-bar input");
+
+  inputField.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      sendButton.click();
+    }
+  });
 }

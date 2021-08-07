@@ -51,8 +51,10 @@ main {
 }
 
 .chat-box p {
+  width: 100%;
   margin: 5px 2px;
   line-height: 18px;
+  word-wrap: break-word;
 }
 
 .bold {
@@ -82,32 +84,47 @@ main {
   height: auto;
   display: flex;
   position: fixed;
+  flex-direction: column;
   bottom: 0;
   left: 0;
   z-index: 1;
   background-color: #ffffff;
-  padding: 15px 20px;
+  padding: 10px 20px;
   box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.05);
 }
 
-.bottom-bar > input {
-  height: 35px;
-  flex-grow: 3;
-  border: none;
+.message-field {
+  display: flex;
+  width: 100%;
 }
 
-.bottom-bar > input::placeholder {
+.message-field input {
+  font-size: 14px;
+  flex-grow: 3;
+  height: 35px;
+  border: none;
+  margin-bottom: 5px;
+}
+
+.message-field input::placeholder {
   font-style: italic;
   color: #000;
 }
 
-.bottom-bar > input:focus {
+.message-field input:focus {
   outline: none;
 }
 
-.bottom-bar > button {
+.message-field button {
+  flex-grow: 1;
   border: none;
   background-color: transparent;
+}
+
+.recipient {
+  font-size: 12px;
+  font-weight: 300;
+  color: #aaaaaa;
 }
 
 /* side-menu styles */
