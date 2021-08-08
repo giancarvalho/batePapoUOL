@@ -4,6 +4,7 @@
 
 body {
   font-family: "Roboto", sans-serif;
+  background-color: #f3f3f3;
 }
 
 .website {
@@ -32,9 +33,8 @@ header {
 }
 
 main {
-  height: 100%;
+  height: auto;
   width: 100%;
-  background-color: #f3f3f3;
   padding: 90px 0px 80px;
 }
 
@@ -51,8 +51,10 @@ main {
 }
 
 .chat-box p {
+  width: 100%;
   margin: 5px 2px;
   line-height: 18px;
+  word-wrap: break-word;
 }
 
 .bold {
@@ -82,32 +84,47 @@ main {
   height: auto;
   display: flex;
   position: fixed;
+  flex-direction: column;
   bottom: 0;
   left: 0;
   z-index: 1;
   background-color: #ffffff;
-  padding: 15px 20px;
+  padding: 10px 20px;
   box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.05);
 }
 
-.bottom-bar > input {
-  height: 35px;
-  flex-grow: 3;
-  border: none;
+.message-field {
+  display: flex;
+  width: 100%;
 }
 
-.bottom-bar > input::placeholder {
+.message-field input {
+  font-size: 14px;
+  flex-grow: 3;
+  height: 35px;
+  border: none;
+  margin-bottom: 5px;
+}
+
+.message-field input::placeholder {
   font-style: italic;
   color: #000;
 }
 
-.bottom-bar > input:focus {
+.message-field input:focus {
   outline: none;
 }
 
-.bottom-bar > button {
+.message-field button {
+  flex-grow: 1;
   border: none;
   background-color: transparent;
+}
+
+.recipient {
+  font-size: 12px;
+  font-weight: 300;
+  color: #aaaaaa;
 }
 
 /* side-menu styles */
@@ -132,15 +149,25 @@ main {
 }
 
 .contact li,
-.visibility-settings div {
+.visibility-settings button {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 10px 0 10px 0;
 }
 
-.side-menu span {
+.visibility-settings button {
+  border: none;
+  background-color: transparent;
+  font-size: 15px;
+  padding: 0;
   width: 100%;
+}
+
+.side-menu span {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
 }
 
 .side-menu ion-icon {
@@ -148,28 +175,101 @@ main {
   margin-right: 3px;
 }
 .side-menu span + ion-icon {
-  display: none;
+  opacity: 0;
   color: #28bb25;
   font-size: 20px;
 }
 
-.side-menu span.active + ion-icon {
-  display: initial;
+.selected span + ion-icon {
+  opacity: 1;
 }
 
 .overlay {
   visibility: hidden;
+  opacity: 0;
   position: fixed;
   width: 100%;
   top: 0;
   bottom: 0;
   z-index: 3;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.65);
   transition: all 300ms ease-in;
 }
 
 .side-menu.active,
 .overlay.active {
+  opacity: 1;
   visibility: initial;
   right: 0;
+}
+
+.join-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #ffffff;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  transition: all 350ms ease-out;
+}
+
+.join-modal.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.join-modal > div {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 40%;
+  margin-top: 20%;
+}
+
+.join-modal img {
+  width: 130px;
+  height: 92px;
+  margin: 0 auto;
+}
+
+.join-modal input,
+.join-modal input:focus {
+  height: 54px;
+  width: 261px;
+  border: 1px solid #d7d7d7;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-field button {
+  margin-top: 15px;
+  height: 45px;
+  width: 110px;
+  background-color: #e7e7e7;
+  border-radius: 9px;
+  border: none;
+  font-size: 15px;
+  color: #696969;
+}
+
+.input-field p {
+  opacity: 0;
+  margin-bottom: 5px;
+  color: #ce3636;
+  transition: all 300ms linear;
+}
+
+.input-field p.active {
+  opacity: 1;
 }

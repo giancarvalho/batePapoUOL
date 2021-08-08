@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="css/styles.css" />
@@ -30,34 +30,24 @@
         <div class="contact">
           <p>Escolha um contato para enviar a mensagem:</p>
           <ul>
-            <li>
-              <span onclick="selectElement(this)"
-                ><ion-icon name="people"></ion-icon> Todos</span
-              ><ion-icon name="checkmark-outline"></ion-icon>
+            <li onclick="selectUser(this)" class="default">
+              <span> <ion-icon name="people"></ion-icon>Todos</span>
+              <ion-icon name="checkmark-outline"></ion-icon>
             </li>
-            <li>
-              <span onclick="selectElement(this)"
-                ><ion-icon name="person-circle"></ion-icon>João</span
-              ><ion-icon name="checkmark-outline"></ion-icon>
-            </li>
-            <li>
-              <span onclick="selectElement(this)"
-                ><ion-icon name="person-circle"></ion-icon>João</span
-              ><ion-icon name="checkmark-outline"></ion-icon>
-            </li>
+
+            <div class="users"></div>
           </ul>
         </div>
         <div class="visibility-settings">
           <p>Escolha a visibilidade:</p>
-          <div class="public">
+          <button class="default" value="message" onclick="selectType(this);">
             <span> <ion-icon name="lock-open"></ion-icon>Público</span>
             <ion-icon name="checkmark-outline"></ion-icon>
-          </div>
-          <div class="private">
+          </button>
+          <button value="private_message" onclick="selectType(this);">
             <span> <ion-icon name="lock-closed"></ion-icon>Reservadamente</span>
-
             <ion-icon name="checkmark-outline"></ion-icon>
-          </div>
+          </button>
         </div>
       </div>
       <div class="overlay" onclick="toggleMenu();"></div>
@@ -72,12 +62,26 @@
       <!-- end main -->
       <!-- beginning bottom bar -->
       <div class="bottom-bar">
-        <input type="text" placeholder="Escreva aqui..." />
-        <button>
-          <img src="assets/Vector.png" alt="send-vector" />
-        </button>
+        <div class="message-field">
+          <input type="text" placeholder="Escreva aqui..." />
+          <button onclick="sendMessage();">
+            <img src="assets/Vector.png" alt="send-vector" />
+          </button>
+        </div>
+        <div class="recipient"></div>
       </div>
       <!-- end bottom bar -->
+
+      <div class="join-modal">
+        <div>
+          <img src="assets/logo 2.png" alt="" />
+          <div class="input-field">
+            <p>Nome inválido ou em uso. Tente novamente.</p>
+            <input type="text" placeholder="Digite seu nome" />
+            <button class="join" onclick="getUsername()">Entrar</button>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- end website -->
     <!-- script files -->
