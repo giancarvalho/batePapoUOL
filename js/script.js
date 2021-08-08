@@ -9,25 +9,31 @@ let username;
 const userMessage = {};
 let lastMessage = "";
 let selectedUser;
-getUsername();
 
 // gets and validates username
 function getUsername() {
-  username = prompt("Qual o seu nome?");
+  let username = document.querySelector(".input-field input").value;
   // send to server user
   if (username !== "" && username !== null) {
     initializeChat(username);
   } else {
-    getUsername();
+    alertMessage();
+    setTimeout(alertMessage, 4000);
   }
+}
+
+function alertMessage() {
+  const message = document.querySelector(".input-field p");
+
+  message.classList.toggle("active");
 }
 
 function initializeChat(username) {
   sendUser(username);
   setDefault();
-  sendWithEnter();
   getMessages();
   requestInterval();
+  hideJoinModal();
 }
 // send username to api
 function sendUser(username) {
@@ -44,8 +50,8 @@ function keepUserConnected() {
 
 function handleError(error) {
   if (error.response.status === 400) {
-    alert("Nome não disponivel. Por favor, escolha outro.");
-    getUsername();
+    alertMessage();
+    setTimeout(alertMessage, 4000);
   }
 }
 
@@ -222,6 +228,12 @@ function selectType(element) {
   element.classList.add("selected");
   userMessage.type = element.value;
   showRecipient();
+}
+
+function hideJoinModal() {
+  const modal = document.querySelector(".join-modal");
+
+  modal.classList.add("hidden");
 }
 
 function showRecipient() {
