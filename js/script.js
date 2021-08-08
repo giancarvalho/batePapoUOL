@@ -12,7 +12,7 @@ let selectedUser;
 
 // gets and validates username
 function getUsername() {
-  let username = document.querySelector(".input-field input").value;
+  username = document.querySelector(".input-field input").value;
   // send to server user
   if (username !== "" && username !== null) {
     initializeChat(username);
@@ -32,6 +32,7 @@ function initializeChat(username) {
   sendUser(username);
   setDefault();
   getMessages();
+  sendWithEnter();
   requestInterval();
   hideJoinModal();
 }
