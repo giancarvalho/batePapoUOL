@@ -13,70 +13,60 @@ let selectedUser;
 // gets and validates username
 function getUsername() {
   username = document.querySelector(".input-field input").value;
-  // send to server user
   if (username !== "" && username !== null) {
-    initializeChat(username);
+    sendUser(username);
   } else {
     alertMessage();
     setTimeout(alertMessage, 4000);
   }
 }
 
+// send username to api
+function sendUser(username) {
+  let promise = axios.post(URL_PARTICIPANTS, { name: username });
+
+  promise.catch(userNotSent);
+  promise.then(initializeChat);
+}
+
+function userNotSent(error) {
+  if (error.response.status === 400) {
+    alertMessage();
+    setTimeout(alertMessage, 4000);
+  } else {
+    handleError(error);
+  }
+}
+
+// activates message username is not valid
 function alertMessage() {
   const message = document.querySelector(".input-field p");
 
   message.classList.toggle("active");
 }
 
-function initializeChat(username) {
-  sendUser(username);
-  setDefault();
-  getMessages();
-  sendWithEnter();
-  requestInterval();
-  hideJoinModal();
-}
-// send username to api
-function sendUser(username) {
-  let promise = axios.post(URL_PARTICIPANTS, { name: username });
-
-  promise.catch(handleError);
-}
-
+// sends username to server
 function keepUserConnected() {
   let promise = axios.post(URL_STATUS, { name: username });
 
   promise.catch(handleError);
 }
 
-function handleError(error) {
-  if (error.response.status === 400) {
-    alertMessage();
-    setTimeout(alertMessage, 4000);
-  }
-}
-
-// get messages from server
-function getMessages() {
-  let promise = axios.get(URL_MESSAGES);
-
-  promise.then(renderMessages);
-  //promise.catch(handleError);
-}
-
-// get message details from current user, not yet working
+// get message details from current user
 function sendMessage() {
   const inputField = document.querySelector(".bottom-bar input");
   userMessage.from = username;
   userMessage.to = confirmUser();
   userMessage.text = inputField.value;
 
-  console.log(userMessage);
-  axios.post(URL_MESSAGES, userMessage);
+  let promise = axios.post(URL_MESSAGES, userMessage);
   inputField.value = null;
-  getMessages();
+
+  promise.then(messageSent);
+  promise.catch(handleError);
 }
 
+// confirms if user still exists
 function confirmUser() {
   if (selectedUser === null || selectedUser === "") {
     return "Todos";
@@ -84,28 +74,30 @@ function confirmUser() {
     return selectedUser;
   }
 }
-// makes sure the messages are up to date and user is online, sendUser is the wrong function
-function requestInterval() {
-  setInterval(getMessages, 3000);
-  setInterval(keepUserConnected, 5000);
+
+function messageSent(promise) {
+  if (promise.status === 200) {
+    getMessages();
+  }
 }
 
-function existNewMessages(messages) {
-  message = messages.slice(-1);
-
-  return lastMessage !== message;
+// reloads the page in case of unknown errors
+function handleError(error) {
+  if (error.response.status !== 400) {
+    alert("Ocorreu um erro. A página será recarregada.");
+    location.reload();
+  }
 }
 
-function scrollToLast() {
-  let lastItem = document.querySelector(".chat-box li:nth-last-child(1)");
+// gets messages from server
+function getMessages() {
+  let promise = axios.get(URL_MESSAGES);
 
-  lastItem.scrollIntoView({
-    block: "start",
-    inline: "nearest",
-  });
+  promise.then(renderMessages);
+  promise.catch(handleError);
 }
 
-// render messages scripts
+// render messages scripts only if new messages are available
 function renderMessages(response) {
   let messages = response.data;
 
@@ -124,6 +116,12 @@ function renderMessages(response) {
     }
     scrollToLast();
   }
+}
+
+function existNewMessages(messages) {
+  message = messages.slice(-1);
+
+  return lastMessage !== message;
 }
 
 function renderStatus(status) {
@@ -157,6 +155,17 @@ function renderMessage(message) {
 </li>`;
 }
 
+// scrolls to last message
+function scrollToLast() {
+  let lastItem = document.querySelector(".chat-box li:nth-last-child(1)");
+
+  lastItem.scrollIntoView({
+    block: "start",
+    inline: "nearest",
+  });
+}
+
+// get participants from server api
 function getParticipants() {
   let promise = axios.get(URL_PARTICIPANTS);
 
@@ -187,16 +196,7 @@ function renderParticipants(response) {
   }
 }
 
-// animation page
-
-function toggleMenu() {
-  const sideMenu = document.querySelector(".side-menu");
-  const overlay = document.querySelector(".overlay");
-
-  sideMenu.classList.toggle("active");
-  overlay.classList.toggle("active");
-}
-
+// gets name of the user from html
 function selectUser(element) {
   const previousSelected = document.querySelector(".contact .selected");
 
@@ -209,14 +209,7 @@ function selectUser(element) {
   showRecipient();
 }
 
-function setDefault() {
-  const defaultContact = document.querySelector(".contact .default");
-  const defaultType = document.querySelector(".visibility-settings .default");
-
-  selectType(defaultType);
-  selectUser(defaultContact);
-}
-
+// selects type of message
 function selectType(element) {
   const previousSelected = document.querySelector(
     ".visibility-settings .selected"
@@ -231,12 +224,7 @@ function selectType(element) {
   showRecipient();
 }
 
-function hideJoinModal() {
-  const modal = document.querySelector(".join-modal");
-
-  modal.classList.add("hidden");
-}
-
+// modifies text with message recipient
 function showRecipient() {
   const element = document.querySelector(".recipient");
 
@@ -249,14 +237,53 @@ function showRecipient() {
   }
 }
 
+// hides join chat modal
+function hideJoinModal() {
+  const modal = document.querySelector(".join-modal");
+
+  modal.classList.add("hidden");
+}
+
+// toggles side menu
+function toggleMenu() {
+  const sideMenu = document.querySelector(".side-menu");
+  const overlay = document.querySelector(".overlay");
+
+  sideMenu.classList.toggle("active");
+  overlay.classList.toggle("active");
+}
+
 function sendWithEnter() {
   const sendButton = document.querySelector(".bottom-bar button");
   const inputField = document.querySelector(".bottom-bar input");
 
   inputField.addEventListener("keyup", function (event) {
-    if (event.keyCode === 13) {
+    if (event.key === "Enter") {
       event.preventDefault();
       sendButton.click();
     }
   });
+}
+
+// set default type and recipient
+function setDefault() {
+  const defaultContact = document.querySelector(".contact .default");
+  const defaultType = document.querySelector(".visibility-settings .default");
+
+  selectType(defaultType);
+  selectUser(defaultContact);
+}
+
+// makes sure the messages are up to date and user is online
+function requestInterval() {
+  setInterval(getMessages, 3000);
+  setInterval(keepUserConnected, 5000);
+}
+
+function initializeChat() {
+  setDefault();
+  getMessages();
+  sendWithEnter();
+  requestInterval();
+  hideJoinModal();
 }
