@@ -16,7 +16,6 @@
   <body>
     <!-- beginning website -->
     <div class="website">
-      <!-- beginning header -->
       <header>
         <img src="assets/logo 1.png" alt="logo-uol" />
 
@@ -24,14 +23,17 @@
           <ion-icon name="people"></ion-icon>
         </button>
       </header>
-      <!-- end header -->
+
       <!-- beginning side menu -->
       <div class="side-menu">
         <div class="contact">
           <p>Escolha um contato para enviar a mensagem:</p>
           <ul>
-            <li onclick="selectUser(this)" class="default">
-              <span> <ion-icon name="people"></ion-icon>Todos</span>
+            <li onclick="selectElement(this)" class="default participant">
+              <span>
+                <ion-icon name="people"></ion-icon>
+                <span class="name">Todos</span></span
+              >
               <ion-icon name="checkmark-outline"></ion-icon>
             </li>
 
@@ -40,27 +42,28 @@
         </div>
         <div class="visibility-settings">
           <p>Escolha a visibilidade:</p>
-          <button class="default" value="message" onclick="selectType(this);">
+          <button
+            class="default"
+            value="message"
+            onclick="selectElement(this);"
+          >
             <span> <ion-icon name="lock-open"></ion-icon>Público</span>
             <ion-icon name="checkmark-outline"></ion-icon>
           </button>
-          <button value="private_message" onclick="selectType(this);">
+          <button value="private_message" onclick="selectElement(this);">
             <span> <ion-icon name="lock-closed"></ion-icon>Reservadamente</span>
             <ion-icon name="checkmark-outline"></ion-icon>
           </button>
         </div>
       </div>
       <div class="overlay" onclick="toggleMenu();"></div>
-      <!-- end side menu -->
 
-      <!-- beginning main -->
       <main>
         <div class="chat-box">
           <ul></ul>
         </div>
       </main>
-      <!-- end main -->
-      <!-- beginning bottom bar -->
+
       <div class="bottom-bar">
         <div class="message-field">
           <input type="text" placeholder="Escreva aqui..." />
@@ -70,8 +73,8 @@
         </div>
         <div class="recipient"></div>
       </div>
-      <!-- end bottom bar -->
 
+      <!-- join chat modal -->
       <div class="join-modal">
         <div>
           <img src="assets/logo 2.png" alt="" />

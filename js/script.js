@@ -54,25 +54,41 @@ function keepUserConnected() {
 
 // get message details from current user
 function sendMessage() {
-  const inputField = document.querySelector(".bottom-bar input");
-  userMessage.from = username;
-  userMessage.to = confirmUser();
-  userMessage.text = inputField.value;
+  selectedUser = confirmUser(selectedUser);
 
-  let promise = axios.post(URL_MESSAGES, userMessage);
-  inputField.value = null;
+  if (selectedUser !== false) {
+    const inputField = document.querySelector(".bottom-bar input");
+    userMessage.from = username;
+    userMessage.text = inputField.value;
+    userMessage.to = selectedUser;
 
-  promise.then(messageSent);
-  promise.catch(handleError);
+    let promise = axios.post(URL_MESSAGES, userMessage);
+    inputField.value = null;
+
+    promise.then(messageSent);
+    promise.catch(handleError);
+  } else {
+    selectedUser = "Todos";
+  }
 }
 
-// confirms if user still exists
-function confirmUser() {
-  if (selectedUser === null || selectedUser === "") {
-    return "Todos";
+// confirms is user is still online and returns false otherwise
+function confirmUser(user) {
+  const selected = document.querySelector(".contact .selected .name");
+
+  if (selected === null) {
+    alertUserOffline(user);
+    setDefault();
+    return false;
   } else {
-    return selectedUser;
+    return selected.innerHTML;
   }
+}
+
+function alertUserOffline(user) {
+  alert(`Mensagem não enviada. O usuário ${user} está offline.`);
+
+  return false;
 }
 
 function messageSent(promise) {
@@ -83,10 +99,10 @@ function messageSent(promise) {
 
 // reloads the page in case of unknown errors
 function handleError(error) {
-  if (error.response.status !== 400) {
-    alert("Ocorreu um erro. A página será recarregada.");
-    location.reload();
-  }
+  alert(
+    `Ocorreu um erro: status ${error.response.status}. A página será recarregada.`
+  );
+  location.reload();
 }
 
 // gets messages from server
@@ -179,16 +195,16 @@ function renderParticipants(response) {
   usersList.innerHTML = "";
   for (let i = 0; newParticipants.length > i; i++) {
     if (newParticipants[i].name === selectedUser) {
-      usersList.innerHTML += `<li class="selected" 'onclick="selectUser(this)">
+      usersList.innerHTML += `<li class="participant selected" onclick="selectElement(this)">
         <span>
-          <ion-icon name="person-circle"></ion-icon>${newParticipants[i].name}
+          <ion-icon name="person-circle"></ion-icon><p class="name">${newParticipants[i].name}</p>
         </span>
         <ion-icon name="checkmark-outline"></ion-icon>
       </li>`;
     } else {
-      usersList.innerHTML += `<li onclick="selectUser(this)">
+      usersList.innerHTML += `<li class="participant" onclick="selectElement(this)">
         <span>
-          <ion-icon name="person-circle"></ion-icon>${newParticipants[i].name}
+          <ion-icon name="person-circle"></ion-icon> <p class="name">${newParticipants[i].name}</p>
         </span>
         <ion-icon name="checkmark-outline"></ion-icon>
       </li>`;
@@ -196,32 +212,28 @@ function renderParticipants(response) {
   }
 }
 
-// gets name of the user from html
-function selectUser(element) {
-  const previousSelected = document.querySelector(".contact .selected");
+// selects recipient name and type of message
+function selectElement(element) {
+  let previousSelected;
+
+  if (isParticipant(element)) {
+    previousSelected = document.querySelector(".contact .selected");
+    selectedUser = element.querySelector(".name").innerHTML;
+  } else {
+    previousSelected = document.querySelector(".visibility-settings .selected");
+    userMessage.type = element.value;
+  }
 
   if (previousSelected !== element && previousSelected !== null) {
     previousSelected.classList.remove("selected");
   }
 
   element.classList.add("selected");
-  selectedUser = element.innerText;
   showRecipient();
 }
 
-// selects type of message
-function selectType(element) {
-  const previousSelected = document.querySelector(
-    ".visibility-settings .selected"
-  );
-
-  if (previousSelected !== element && previousSelected !== null) {
-    previousSelected.classList.remove("selected");
-  }
-
-  element.classList.add("selected");
-  userMessage.type = element.value;
-  showRecipient();
+function isParticipant(element) {
+  return element.classList.contains("participant");
 }
 
 // modifies text with message recipient
@@ -229,11 +241,11 @@ function showRecipient() {
   const element = document.querySelector(".recipient");
 
   if (userMessage.type === "private_message") {
-    element.innerHTML = `Enviando para ${selectedUser} (reservadamente)`;
+    element.innerHTML = `Enviando para <p>${selectedUser}</p> (reservadamente)`;
   } else if (selectedUser === null || selectedUser === "") {
     element.innerHTML = `Enviando para Todos`;
   } else {
-    element.innerHTML = `Enviando para ${selectedUser}`;
+    element.innerHTML = `Enviando para <p>${selectedUser}</p>`;
   }
 }
 
@@ -270,8 +282,8 @@ function setDefault() {
   const defaultContact = document.querySelector(".contact .default");
   const defaultType = document.querySelector(".visibility-settings .default");
 
-  selectType(defaultType);
-  selectUser(defaultContact);
+  selectElement(defaultType);
+  selectElement(defaultContact);
 }
 
 // makes sure the messages are up to date and user is online

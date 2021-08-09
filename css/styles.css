@@ -122,9 +122,18 @@ main {
 }
 
 .recipient {
+  display: flex;
   font-size: 12px;
   font-weight: 300;
   color: #aaaaaa;
+}
+
+.recipient p {
+  max-width: 40%;
+  margin: 0 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* side-menu styles */
@@ -142,10 +151,18 @@ main {
   transition: all 300ms linear;
 }
 
-.side-menu p {
+.side-menu div > p {
   text-align: center;
   font-weight: 700;
   padding: 20px;
+}
+
+.contact ul {
+  height: 60%;
+  overflow-y: scroll;
+}
+.contact ul::-webkit-scrollbar {
+  display: none;
 }
 
 .contact li,
@@ -154,6 +171,13 @@ main {
   align-items: center;
   justify-content: space-between;
   margin: 10px 0 10px 0;
+}
+
+.contact .name {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .visibility-settings button {
